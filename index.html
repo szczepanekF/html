@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>pytanie</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        overflow: hidden;
+      }
+
+      body {
+        font-family:
+          "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 25%,
+          #f093fb 50%,
+          #f5576c 75%,
+          #ffa8a8 100%
+        );
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        position: relative;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: linear-gradient(
+            135deg,
+            #1a1a2e 0%,
+            #16213e 25%,
+            #533483 50%,
+            #8b2f5e 75%,
+            #c9184a 100%
+          );
+          background-size: 400% 400%;
+          animation: gradientShift 15s ease infinite;
+        }
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .floating-hearts {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      .heart {
+        position: absolute;
+        font-size: 20px;
+        opacity: 0.6;
+        animation: floatUp 8s infinite;
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.6;
+        }
+        90% {
+          opacity: 0.6;
+        }
+        100% {
+          transform: translateY(-100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .container {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 20px;
+        max-width: 700px;
+        width: 90%;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        color: white;
+        text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+        margin-bottom: 30px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .image-container {
+        margin: 30px auto;
+        max-width: 300px;
+        width: 80%;
+      }
+
+      .image-container img {
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        animation: imageFloat 3s ease-in-out infinite;
+      }
+
+      @keyframes imageFloat {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .buttons-wrapper {
+        position: relative;
+        min-height: 100px;
+        width: 100%;
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        position: relative;
+      }
+
+      .btn {
+        font-family: inherit;
+        font-size: clamp(1.2rem, 3vw, 1.8rem);
+        padding: 20px 40px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        touch-action: none;
+      }
+
+      .btn-yes {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        animation: bounce 2s ease-in-out infinite;
+        position: relative;
+        z-index: 100;
+        transition: transform 0.3s ease;
+      }
+
+      .btn-yes:hover {
+        transform: scale(1.1) rotate(-5deg);
+        box-shadow: 0 15px 40px rgba(245, 87, 108, 0.5);
+      }
+
+      .btn-yes.grow {
+        animation:
+          bounce 2s ease-in-out infinite,
+          grow 0.3s ease forwards;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @keyframes grow {
+        to {
+          transform: scale(1.2);
+        }
+      }
+
+      .btn-no {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transition: all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 50;
+        position: relative;
+      }
+
+      .btn-no.escaped {
+        position: fixed;
+      }
+
+      .btn-no:hover {
+        transform: scale(1.05);
+      }
+
+      .success-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        z-index: 1000;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+      }
+
+      .success-screen.active {
+        display: flex;
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      .success-content {
+        text-align: center;
+        z-index: 1001;
+      }
+
+      .success-content h2 {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        color: white;
+        text-shadow: 3px 3px 15px rgba(0, 0, 0, 0.4);
+        margin-bottom: 30px;
+        animation: zoomIn 0.8s ease-out;
+      }
+
+      @keyframes zoomIn {
+        from {
+          transform: scale(0);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .gif-container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap; /* na mobile spadną pod siebie */
+      }
+
+      .gif-container img {
+        width: 300px;
+        max-width: 45vw;
+        height: 12vw;
+        object-fit: cover; /* kluczowe */
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+
+      canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 999;
+      }
+
+      .no-text {
+        font-size: clamp(1rem, 2.5vw, 1.3rem);
+        color: white;
+        margin-top: 20px;
+        min-height: 30px;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        .buttons {
+          flex-direction: column;
+          gap: 30px;
+        }
+
+        .buttons-wrapper {
+          min-height: 200px;
+        }
+
+        .image-container {
+          max-width: 250px;
+        }
+      }
+      #noText {
+        position: relative;
+        z-index: 20;
+      }
+
+      .btn-yes {
+        z-index: 30;
+      }
+
+      .btn-no {
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <div class="container" id="mainContainer">
+      <h1>Zostaniesz moją walentynką? 💕🥺</h1>
+
+      <!-- TEMPLATE: Wstaw tutaj swoje zdjęcie z bukietem -->
+      <div class="image-container">
+        <img src="unnamed.jpg" alt="Zdjęcie z bukietem" id="mainImage" />
+      </div>
+      <!-- Zamień atrybut src powyżej na ścieżkę do swojego zdjęcia, np: src="twoje-zdjecie.jpg" -->
+
+      <div class="buttons-wrapper" id="buttonsWrapper">
+        <div class="buttons" id="buttonsContainer">
+          <button class="btn btn-yes" id="btnYes">tak &lt;3</button>
+          <button class="btn btn-no" id="btnNo">Nie</button>
+        </div>
+      </div>
+      <div class="no-text" id="noText"></div>
+    </div>
+
+    <div class="success-screen" id="successScreen">
+      <canvas id="confettiCanvas"></canvas>
+      <div class="success-content">
+        <h2>Klasa</h2>
+        <div class="gif-container">
+          <img
+            src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmMyZ3ltZXJjYmVsMndkNmQydGlnYjRvNTlscWFpdG1mZW5kZzhvYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5tCSu3MG39omA/giphy.gif"
+            alt="Happy Valentine"
+          />
+          <img
+            src=" https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3Rqb2xxOGNudTVuOTR1M3RzbWQ0eHo5NXNodGUxdmlqY29jNWIwaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LbC9yf16pIS74lXTDc/giphy.gif"
+            alt="Happy Valentine"
+          />
+        </div>
+        <h2
+          style="font-size: clamp(1.5rem, 4vw, 2.5rem); animation-delay: 0.5s"
+        >
+          Dzieki ❤️
+        </h2>
+      </div>
+    </div>
+
+    <script>
+      // Floating hearts background
+      const heartsContainer = document.getElementById("floatingHearts");
+      const heartEmojis = ["💕", "💖", "💗", "💓", "💝", "💘", "❤️", "💞"];
+
+      function createFloatingHeart() {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent =
+          heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.animationDuration = Math.random() * 5 + 5 + "s";
+        heart.style.animationDelay = Math.random() * 5 + "s";
+        heartsContainer.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 13000);
+      }
+
+      for (let i = 0; i < 15; i++) {
+        setTimeout(createFloatingHeart, i * 500);
+      }
+      setInterval(createFloatingHeart, 1000);
+
+      // Button logic
+      const btnYes = document.getElementById("btnYes");
+      const btnNo = document.getElementById("btnNo");
+      const noText = document.getElementById("noText");
+      const successScreen = document.getElementById("successScreen");
+      const buttonsWrapper = document.getElementById("buttonsWrapper");
+
+      const noTexts = [
+        "?",
+        "???",
+        "💀💀💀",
+        "Serio?",
+        "Grabisz sobie",
+        "Znudziło Ci się oddychanie prostym nosem nosem👃?",
+        "aha",
+        "AHA",
+        "...",
+        "no weź już przestań",
+        "spróbuj jeszcze raz 🙂",
+        "nie widzisz że przycisk nie działa?",
+        "serio nic wiecej sie nie stanie",
+        "daj se siana",
+        "🤡",
+        "💔",
+      ];
+
+      let noClickCount = 0;
+      let isEscaping = false;
+      let hasEscaped = false;
+      let yesScale = 1;
+
+      function isOverlapping(rect1, rect2, padding = 20) {
+        return !(
+          rect1.right + padding < rect2.left - padding ||
+          rect1.left - padding > rect2.right + padding ||
+          rect1.bottom + padding < rect2.top - padding ||
+          rect1.top - padding > rect2.bottom + padding
+        );
+      }
+
+      function getRandomPosition() {
+        const buttonWidth = btnNo.offsetWidth;
+        const buttonHeight = btnNo.offsetHeight;
+        const padding = 20;
+
+        // Użyj całego ekranu zamiast tylko wrapper'a
+        const maxX = window.innerWidth - buttonWidth - padding;
+        const maxY = window.innerHeight - buttonHeight - padding;
+        const minX = padding;
+        const minY = padding;
+
+        const yesRect = btnYes.getBoundingClientRect();
+        const noTextRect = noText.getBoundingClientRect();
+
+        // Lista zabronionych obszarów (przycisk "tak" i tekst)
+        const forbidden = [yesRect, noTextRect];
+
+        let attempts = 0;
+        const maxAttempts = 200;
+
+        while (attempts < maxAttempts) {
+          const x = Math.random() * (maxX - minX) + minX;
+          const y = Math.random() * (maxY - minY) + minY;
+
+          const candidate = {
+            left: x,
+            right: x + buttonWidth,
+            top: y,
+            bottom: y + buttonHeight,
+          };
+
+          // Sprawdź czy nie nachodzi na żaden zabroniony obszar
+          const overlaps = forbidden.some((zone) =>
+            isOverlapping(candidate, zone, 50),
+          );
+
+          if (!overlaps) {
+            return { x, y };
+          }
+
+          attempts++;
+        }
+
+        // Fallback - znajdź bezpieczną pozycję w rogach ekranu
+        const corners = [
+          { x: minX, y: minY }, // lewy górny
+          { x: maxX, y: minY }, // prawy górny
+          { x: minX, y: maxY }, // lewy dolny
+          { x: maxX, y: maxY }, // prawy dolny
+        ];
+
+        for (const corner of corners) {
+          const candidate = {
+            left: corner.x,
+            right: corner.x + buttonWidth,
+            top: corner.y,
+            bottom: corner.y + buttonHeight,
+          };
+
+          const overlaps = forbidden.some((zone) =>
+            isOverlapping(candidate, zone, 50),
+          );
+
+          if (!overlaps) {
+            return corner;
+          }
+        }
+
+        // Ostateczny fallback - środek prawej krawędzi
+        return { x: maxX, y: window.innerHeight / 2 - buttonHeight / 2 };
+      }
+
+      function escapeButton(e) {
+        if (isEscaping) {
+          if (e) e.preventDefault();
+          return;
+        }
+
+        if (e) e.preventDefault();
+        isEscaping = true;
+
+        // Zmień na fixed positioning przy pierwszej ucieczce
+        if (!hasEscaped) {
+          btnNo.classList.add("escaped");
+          hasEscaped = true;
+        }
+
+        const pos = getRandomPosition();
+
+        btnNo.style.left = pos.x + "px";
+        btnNo.style.top = pos.y + "px";
+
+        noText.textContent = noTexts[noClickCount % noTexts.length];
+        noClickCount++;
+
+        // Powiększ przycisk "Tak"
+        yesScale += 0.1;
+        if (yesScale > 2) yesScale = 2;
+        btnYes.style.transform = `scale(${yesScale})`;
+        btnYes.classList.add("grow");
+
+        setTimeout(() => {
+          isEscaping = false;
+        }, 200);
+      }
+
+      // Desktop hover escape
+      btnNo.addEventListener("mouseenter", (e) => {
+        escapeButton(e);
+      });
+
+      // Mobile/touch handling
+      let touchMoved = false;
+
+      btnNo.addEventListener("touchstart", (e) => {
+        touchMoved = false;
+        escapeButton(e);
+      });
+
+      btnNo.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        touchMoved = true;
+      });
+
+      btnNo.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        if (!touchMoved) {
+          escapeButton(e);
+        }
+      });
+
+      // Click escape (backup)
+      btnNo.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        escapeButton(e);
+      });
+
+      // Prevent default pointer events
+      btnNo.addEventListener("pointerdown", (e) => {
+        escapeButton(e);
+      });
+
+      // Yes button success
+      btnYes.addEventListener("click", () => {
+        successScreen.classList.add("active");
+        playConfetti();
+      });
+
+      // Confetti animation
+      function playConfetti() {
+        const canvas = document.getElementById("confettiCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const particleCount = 150;
+        const colors = [
+          "#ff6b9d",
+          "#f093fb",
+          "#f5576c",
+          "#ffa8a8",
+          "#764ba2",
+          "#667eea",
+        ];
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height - canvas.height;
+            this.size = Math.random() * 8 + 4;
+            this.speedY = Math.random() * 3 + 2;
+            this.speedX = Math.random() * 2 - 1;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.rotation = Math.random() * 360;
+            this.rotationSpeed = Math.random() * 10 - 5;
+            this.isHeart = Math.random() > 0.5;
+          }
+
+          update() {
+            this.y += this.speedY;
+            this.x += this.speedX;
+            this.rotation += this.rotationSpeed;
+
+            if (this.y > canvas.height) {
+              this.y = -10;
+              this.x = Math.random() * canvas.width;
+            }
+          }
+
+          draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate((this.rotation * Math.PI) / 180);
+
+            if (this.isHeart) {
+              ctx.font = this.size + "px Arial";
+              ctx.fillText("❤️", 0, 0);
+            } else {
+              ctx.fillStyle = this.color;
+              ctx.fillRect(
+                -this.size / 2,
+                -this.size / 2,
+                this.size,
+                this.size,
+              );
+            }
+
+            ctx.restore();
+          }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          particles.forEach((particle) => {
+            particle.update();
+            particle.draw();
+          });
+
+          requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        setTimeout(() => {
+          canvas.style.opacity = "0";
+          canvas.style.transition = "opacity 2s";
+        }, 8000);
+      }
+
+      // Prevent pull-to-refresh and overscroll on mobile
+      document.body.addEventListener(
+        "touchmove",
+        function (e) {
+          if (e.target === document.body) {
+            e.preventDefault();
+          }
+        },
+        { passive: false },
+      );
+    </script>
+  </body>
+</html>
